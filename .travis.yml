@@ -1,0 +1,14 @@
+language: java
+sudo: false
+env:
+  - CODACY_PROJECT_TOKEN=034193799d1f4a70a23bd5c9260e4872
+script:
+  - mvn clean install
+  - mvn cobertura:cobertura
+
+before_install:
+  - sudo apt-get install jq
+  - wget -O ~/codacy-coverage-reporter-assembly-latest.jar $(curl https://api.github.com/repos/codacy/codacy-coverage-reporter/releases/latest | jq -r .assets[0].browser_download_url)
+
+after_success:
+  - java -cp ~/codacy-coverage-reporter-assembly-latest.jar com.codacy.CodacyCoverageReporter -l Java -r target/site/cobertura/coverage.xml
