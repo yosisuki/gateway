@@ -24,6 +24,9 @@ public class GatewayEndPoint extends BaseMongo {
   @Field(value = PrivilegeFields.PRIVILEGE_ID)
   private String privilegeId;
 
+  @Field(value = PrivilegeFields.GROUP_NAME)
+  private String groupName;
+
   public String getSlug() {
     return slug;
   }
@@ -56,6 +59,14 @@ public class GatewayEndPoint extends BaseMongo {
     this.privilegeId = privilegeId;
   }
 
+  public String getGroupName() {
+    return groupName;
+  }
+
+  public void setGroupName(String groupName) {
+    this.groupName = groupName;
+  }
+
   @Override
   public String toString() {
     return "GatewayEndPoint{" +
@@ -63,6 +74,7 @@ public class GatewayEndPoint extends BaseMongo {
         ", url='" + url + '\'' +
         ", action='" + action + '\'' +
         ", privilegeId='" + privilegeId + '\'' +
+        ", groupName='" + groupName + '\'' +
         '}';
   }
 }

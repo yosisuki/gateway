@@ -10,6 +10,8 @@ public class GatewayBaseResponse<T> extends BaseResponse<T> {
 
   private List<PrivilegeResponse> privileges;
 
+  private List<PrivilegeResponse> currentSlugPrivileges;
+
   private List<Integer> roles;
 
   public SessionData getSessionData() {
@@ -29,6 +31,15 @@ public class GatewayBaseResponse<T> extends BaseResponse<T> {
     this.privileges = privileges;
   }
 
+  public List<PrivilegeResponse> getCurrentSlugPrivileges() {
+    return currentSlugPrivileges;
+  }
+
+  public void setCurrentSlugPrivileges(
+      List<PrivilegeResponse> currentSlugPrivileges) {
+    this.currentSlugPrivileges = currentSlugPrivileges;
+  }
+
   public List<Integer> getRoles() {
     return roles;
   }
@@ -42,6 +53,7 @@ public class GatewayBaseResponse<T> extends BaseResponse<T> {
     return "GatewayBaseResponse{" +
         "sessionData=" + sessionData +
         ", privileges=" + privileges +
+        ", currentSlugPrivileges=" + currentSlugPrivileges +
         ", roles=" + roles +
         '}';
   }

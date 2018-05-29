@@ -5,4 +5,5 @@ public class PrivilegeFields extends BaseMongoFields {
   public static final String PRIVILEGE_NAME = "privilegeName";
   public static final String PRIVILEGE_DESCRIPTION = "privilegeDescription";
   public static final String ACTION = "action";
+  public static final String GROUP_NAME = "groupName";
 }

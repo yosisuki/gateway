@@ -10,4 +10,9 @@ public interface PrivilegeService {
 
   Single<List<PrivilegeResponse>> getAuthorizedPrivileges(MandatoryRequest mandatoryRequest, String
       privilegeToCheck);
+
+  Single<List<PrivilegeResponse>> getAuthorizedPrivilegesInCurrentSlug(MandatoryRequest
+      mandatoryRequest,
+      String
+      privilegeToCheck, String groupName);
 }

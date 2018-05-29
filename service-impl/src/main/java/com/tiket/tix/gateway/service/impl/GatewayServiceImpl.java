@@ -30,7 +30,7 @@ public class GatewayServiceImpl implements GatewayService {
       Object object,
       RequestMethods requestMethods,
       Map<String, String> requestParams,
-      String requiredPrivilege, String privileges) {
+      String requiredPrivilege, String groupName, String privileges) {
 
       Map<String, String> header = new HashMap<>();
       header.put("storeId", mandatoryRequest.getStoreId());
@@ -64,12 +64,19 @@ public class GatewayServiceImpl implements GatewayService {
           throw new BusinessLogicException(ResponseCode.REQUEST_NOT_VALID.getCode(), ResponseCode
               .REQUEST_NOT_VALID.getMessage());
         }
-      }).flatMap(gatewayBaseResponse -> privilegeService.getAuthorizedPrivileges(mandatoryRequest
+      })
+          .flatMap(gatewayBaseResponse -> privilegeService.getAuthorizedPrivileges(mandatoryRequest
               , privileges)
               .map(privilegeResponses -> {
                 gatewayBaseResponse.setPrivileges(privilegeResponses);
                 return gatewayBaseResponse;
-          }));
+          }))
+          .flatMap(gatewayBaseResponse -> privilegeService.getAuthorizedPrivilegesInCurrentSlug(mandatoryRequest
+              , privileges, groupName)
+              .map(privilegeResponses -> {
+                gatewayBaseResponse.setCurrentSlugPrivileges(privilegeResponses);
+                return gatewayBaseResponse;
+              }));
   }
 
   private boolean isExistBody(Object object) {

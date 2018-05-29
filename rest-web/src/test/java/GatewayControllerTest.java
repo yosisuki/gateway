@@ -81,6 +81,8 @@ public class GatewayControllerTest {
 
   String PRIVILEGE_TO_CHECK = "1,2";
 
+  String GROUP_NAME = "banks";
+
   LinkedHashMap<String, String> OBJECT_MAP = new LinkedHashMap<>();
 
   GatewayEndPoint GATEWAY_END_POINT = new GatewayEndPointBuilder().withSlug(SLUG).withUrl(URL)
@@ -89,7 +91,7 @@ public class GatewayControllerTest {
   @Test
   public void receiveAndForwardGetAllTest() throws Exception {
     when(this.gatewayService.forwardRequest(CommonTestVariable.MANDATORY_REQUEST, URL, null,
-        null, RequestMethods.GET, QUERY, PRIVILEGE, PRIVILEGE_TO_CHECK))
+        null, RequestMethods.GET, QUERY, PRIVILEGE, GROUP_NAME, PRIVILEGE_TO_CHECK))
         .thenReturn(Single
         .just
         (RESPONSE_OBJECT));
@@ -117,14 +119,14 @@ public class GatewayControllerTest {
         .andReturn();
 
     verify(this.gatewayService).forwardRequest(CommonTestVariable.MANDATORY_REQUEST, URL, null,
-        null, RequestMethods.GET, QUERY, PRIVILEGE, PRIVILEGE_TO_CHECK);
+        null, RequestMethods.GET, QUERY, PRIVILEGE, GROUP_NAME, PRIVILEGE_TO_CHECK);
   }
 
   @Test
   public void receiveForwardGetTest() throws Exception {
     when(this.gatewayService.forwardRequest(
         CommonTestVariable.MANDATORY_REQUEST, URL, "123",
-        null, RequestMethods.GET, null, PRIVILEGE, PRIVILEGE_TO_CHECK)
+        null, RequestMethods.GET, null, PRIVILEGE, GROUP_NAME,  PRIVILEGE_TO_CHECK)
     ).thenReturn(Single.just(RESPONSE_OBJECT));
 
     when(gatewayEndPointService.findEndpointBySlug(
@@ -149,14 +151,14 @@ public class GatewayControllerTest {
         .andReturn();
 
     verify(this.gatewayService).forwardRequest(CommonTestVariable.MANDATORY_REQUEST, URL, "123",
-        null, RequestMethods.GET, null, PRIVILEGE, PRIVILEGE_TO_CHECK);
+        null, RequestMethods.GET, null, PRIVILEGE, GROUP_NAME, PRIVILEGE_TO_CHECK);
   }
 
   @Test
   public void receiveForwardDeleteTest() throws Exception {
     when(this.gatewayService.forwardRequest(
         CommonTestVariable.MANDATORY_REQUEST, URL, "123",
-        null, RequestMethods.DELETE, null, PRIVILEGE, PRIVILEGE_TO_CHECK)
+        null, RequestMethods.DELETE, null, PRIVILEGE, GROUP_NAME, PRIVILEGE_TO_CHECK)
     ).thenReturn(Single.just(RESPONSE_OBJECT));
 
     when(gatewayEndPointService.findEndpointBySlug(
@@ -181,7 +183,7 @@ public class GatewayControllerTest {
         .andReturn();
 
     verify(this.gatewayService).forwardRequest(CommonTestVariable.MANDATORY_REQUEST, URL, "123",
-        null, RequestMethods.DELETE, null, PRIVILEGE, PRIVILEGE_TO_CHECK);
+        null, RequestMethods.DELETE, null, PRIVILEGE, GROUP_NAME, PRIVILEGE_TO_CHECK);
   }
 
   @Before

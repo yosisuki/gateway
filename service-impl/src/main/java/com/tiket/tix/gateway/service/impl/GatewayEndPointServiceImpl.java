@@ -6,6 +6,7 @@ import com.tiket.tix.gateway.entity.constant.enums.ResponseCode;
 import com.tiket.tix.gateway.entity.dao.GatewayEndPoint;
 import com.tiket.tix.gateway.libraries.exception.BusinessLogicException;
 import com.tiket.tix.gateway.service.api.GatewayEndPointService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,5 +29,14 @@ public class GatewayEndPointServiceImpl implements GatewayEndPointService {
     }
 
     return endPoint;
+  }
+
+  @Override
+  public List<GatewayEndPoint> findEndpointByGroupName(MandatoryRequest mandatoryRequest, String
+      groupName) {
+
+    return this.gatewayEndPointRepository
+        .findByStoreIdAndGroupNameAndIsDeleted
+            (mandatoryRequest.getStoreId(),groupName, 0);
   }
 }

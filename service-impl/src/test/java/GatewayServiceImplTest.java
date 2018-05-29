@@ -54,6 +54,8 @@ public class GatewayServiceImplTest {
 
   String PRIVILEGE_TO_CHECK = "1,2";
 
+  String GROUP_NAME = "banks";
+
   List<PrivilegeResponse> PRIVILEGE_RESPONSE = Arrays.asList(
       new PrivilegeResponseBuilder()
       .withPrivilegeId("1")
@@ -79,6 +81,7 @@ public class GatewayServiceImplTest {
         RequestMethods.GET,
         QUERY,
         PRIVILEGE,
+        GROUP_NAME,
         PRIVILEGE_TO_CHECK
         ).blockingGet();
 
@@ -107,6 +110,7 @@ public class GatewayServiceImplTest {
         RequestMethods.GET,
         QUERY,
         PRIVILEGE,
+        GROUP_NAME,
         PRIVILEGE_TO_CHECK
     ).blockingGet();
 
@@ -134,6 +138,7 @@ public class GatewayServiceImplTest {
         RequestMethods.POST,
         null,
         PRIVILEGE,
+        GROUP_NAME,
         PRIVILEGE_TO_CHECK
     ).blockingGet();
 
@@ -163,6 +168,7 @@ public class GatewayServiceImplTest {
         RequestMethods.PUT,
         null,
         PRIVILEGE,
+        GROUP_NAME,
         PRIVILEGE_TO_CHECK
     ).blockingGet();
 
@@ -192,6 +198,7 @@ public class GatewayServiceImplTest {
         RequestMethods.DELETE,
         null,
         PRIVILEGE,
+        GROUP_NAME,
         PRIVILEGE_TO_CHECK
     ).blockingGet();
 
