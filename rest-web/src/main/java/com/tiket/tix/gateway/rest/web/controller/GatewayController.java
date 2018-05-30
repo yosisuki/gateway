@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
-import retrofit2.http.POST;
 
 @RestController
 @RequestMapping(value = "")
@@ -107,7 +106,9 @@ public class GatewayController {
         gatewayEndPoint.getPrivilegeId(),
         gatewayEndPoint.getGroupName(),
         (String)MDC.get(BaseMongoFields
-            .PRIVILEGES)).subscribe
+            .PRIVILEGES),
+        sessionData)
+        .subscribe
         (deferred::setResult,
         deferred::setErrorResult);
 
@@ -147,7 +148,8 @@ public class GatewayController {
     this.gatewayService.forwardRequest(mandatoryRequest,gatewayEndPoint.getUrl(), param, null,
         RequestMethods.GET, null, gatewayEndPoint.getPrivilegeId(),
         gatewayEndPoint.getGroupName(),(String)MDC.get(BaseMongoFields
-            .PRIVILEGES))
+            .PRIVILEGES),
+        sessionData)
         .subscribe(deferred::setResult, deferred::setErrorResult);
 
     return deferred;
@@ -187,7 +189,8 @@ public class GatewayController {
         RequestMethods.POST, null, gatewayEndPoint.getPrivilegeId(),
         gatewayEndPoint.getGroupName(),(String)MDC.get
             (BaseMongoFields
-        .PRIVILEGES))
+        .PRIVILEGES),
+        sessionData)
         .subscribe(deferred::setResult, deferred::setErrorResult);
 
     return deferred;
@@ -224,7 +227,8 @@ public class GatewayController {
         RequestMethods.PUT, requestParams, gatewayEndPoint.getPrivilegeId(),
         gatewayEndPoint.getGroupName(),(String)MDC.get
             (BaseMongoFields
-            .PRIVILEGES))
+            .PRIVILEGES),
+        sessionData)
         .subscribe(deferred::setResult, deferred::setErrorResult);
 
     return deferred;
@@ -263,7 +267,8 @@ public class GatewayController {
         RequestMethods.PUT, requestParams, gatewayEndPoint.getPrivilegeId(),
         gatewayEndPoint.getGroupName(),(String)MDC.get
             (BaseMongoFields
-                .PRIVILEGES))
+                .PRIVILEGES),
+        sessionData)
         .subscribe(deferred::setResult, deferred::setErrorResult);
 
     return deferred;
@@ -295,10 +300,16 @@ public class GatewayController {
     GatewayEndPoint gatewayEndPoint = this.endPointService.findEndpointBySlug(mandatoryRequest,
         endPoint, DELETE_ACTION);
 
-    this.gatewayService.forwardRequest(mandatoryRequest,gatewayEndPoint.getUrl(), param, null,
-        RequestMethods.DELETE, null, gatewayEndPoint.getPrivilegeId(),
-        gatewayEndPoint.getGroupName(),(String)MDC.get
-            (BaseMongoFields.PRIVILEGES))
+    this.gatewayService.forwardRequest(
+        mandatoryRequest,gatewayEndPoint.getUrl(),
+        param,
+        null,
+        RequestMethods.DELETE,
+        null,
+        gatewayEndPoint.getPrivilegeId(),
+        gatewayEndPoint.getGroupName(),
+        (String)MDC.get(BaseMongoFields.PRIVILEGES),
+        sessionData)
         .subscribe(deferred::setResult, deferred::setErrorResult);
     return deferred;
   }

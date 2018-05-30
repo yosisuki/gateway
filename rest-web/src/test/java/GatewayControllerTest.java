@@ -1,4 +1,3 @@
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -6,7 +5,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.tiket.tix.common.libraries.JSONHelper;
 import com.tiket.tix.gateway.entity.constant.ApiPath;
 import com.tiket.tix.gateway.entity.constant.enums.RequestMethods;
 import com.tiket.tix.gateway.entity.constant.fields.BaseMongoFields;
@@ -16,12 +14,18 @@ import com.tiket.tix.gateway.entity.dao.GatewayEndPointBuilder;
 import com.tiket.tix.gateway.entity.dao.Privilege;
 import com.tiket.tix.gateway.entity.dao.PrivilegeBuilder;
 import com.tiket.tix.gateway.entity.outbound.GatewayBaseResponse;
+import com.tiket.tix.gateway.entity.outbound.PrivilegeResponse;
+import com.tiket.tix.gateway.entity.outbound.PrivilegeResponseBuilder;
+import com.tiket.tix.gateway.entity.outbound.SessionData;
+import com.tiket.tix.gateway.entity.outbound.SessionDataBuilder;
 import com.tiket.tix.gateway.rest.web.controller.GatewayController;
 import com.tiket.tix.gateway.service.api.GatewayEndPointService;
 import com.tiket.tix.gateway.service.api.GatewayService;
 import io.reactivex.Single;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import org.apache.log4j.MDC;
 import org.junit.After;
@@ -83,15 +87,35 @@ public class GatewayControllerTest {
 
   String GROUP_NAME = "banks";
 
+  SessionData SESSION_DATA = new SessionDataBuilder()
+      .withUsername(CommonTestVariable.USERNAME)
+      .build();
+
   LinkedHashMap<String, String> OBJECT_MAP = new LinkedHashMap<>();
 
-  GatewayEndPoint GATEWAY_END_POINT = new GatewayEndPointBuilder().withSlug(SLUG).withUrl(URL)
-      .withPrivilegeId(PRIVILEGE).build();
+  GatewayEndPoint GATEWAY_END_POINT = new GatewayEndPointBuilder()
+      .withSlug(SLUG).withUrl(URL)
+      .withAction("getAll")
+      .withPrivilegeId(PRIVILEGE)
+      .withGroupName(GROUP_NAME)
+      .build();
+
+  List<PrivilegeResponse> PRIVILEGE_RESPONSES = Arrays.asList(new PrivilegeResponseBuilder()
+      .withPrivilegeName("123").withPrivilegeId(PRIVILEGE).build());
 
   @Test
   public void receiveAndForwardGetAllTest() throws Exception {
-    when(this.gatewayService.forwardRequest(CommonTestVariable.MANDATORY_REQUEST, URL, null,
-        null, RequestMethods.GET, QUERY, PRIVILEGE, GROUP_NAME, PRIVILEGE_TO_CHECK))
+    when(this.gatewayService.forwardRequest(
+        CommonTestVariable.MANDATORY_REQUEST,
+        URL,
+        null,
+        null,
+        RequestMethods.GET,
+        QUERY,
+        PRIVILEGE,
+        GROUP_NAME,
+        PRIVILEGE_TO_CHECK,
+        SESSION_DATA))
         .thenReturn(Single
         .just
         (RESPONSE_OBJECT));
@@ -104,13 +128,8 @@ public class GatewayControllerTest {
         .get(ApiPath.BASE_PATH + "/{endPoint}", "banks")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
-        .header("storeId", CommonTestVariable.STORE_ID)
-        .header("username", CommonTestVariable.USERNAME)
-        .header("channelId", CommonTestVariable.CHANNEL_ID)
-        .header("serviceId", CommonTestVariable.SERVICE_ID)
-        .header("requestId", CommonTestVariable.REQUEST_ID)
-        .param("page", "0")
-        .param("size", "10");
+        .param("size", "10")
+        .param("page", "0");
 
     MvcResult deferredResult = this.mockMvc.perform(builder).andReturn();
 
@@ -119,14 +138,14 @@ public class GatewayControllerTest {
         .andReturn();
 
     verify(this.gatewayService).forwardRequest(CommonTestVariable.MANDATORY_REQUEST, URL, null,
-        null, RequestMethods.GET, QUERY, PRIVILEGE, GROUP_NAME, PRIVILEGE_TO_CHECK);
+        null, RequestMethods.GET, QUERY, PRIVILEGE, GROUP_NAME, PRIVILEGE_TO_CHECK, SESSION_DATA);
   }
 
   @Test
   public void receiveForwardGetTest() throws Exception {
     when(this.gatewayService.forwardRequest(
         CommonTestVariable.MANDATORY_REQUEST, URL, "123",
-        null, RequestMethods.GET, null, PRIVILEGE, GROUP_NAME,  PRIVILEGE_TO_CHECK)
+        null, RequestMethods.GET, null, PRIVILEGE, GROUP_NAME,  PRIVILEGE_TO_CHECK, SESSION_DATA)
     ).thenReturn(Single.just(RESPONSE_OBJECT));
 
     when(gatewayEndPointService.findEndpointBySlug(
@@ -151,14 +170,14 @@ public class GatewayControllerTest {
         .andReturn();
 
     verify(this.gatewayService).forwardRequest(CommonTestVariable.MANDATORY_REQUEST, URL, "123",
-        null, RequestMethods.GET, null, PRIVILEGE, GROUP_NAME, PRIVILEGE_TO_CHECK);
+        null, RequestMethods.GET, null, PRIVILEGE, GROUP_NAME, PRIVILEGE_TO_CHECK, SESSION_DATA);
   }
 
   @Test
   public void receiveForwardDeleteTest() throws Exception {
     when(this.gatewayService.forwardRequest(
         CommonTestVariable.MANDATORY_REQUEST, URL, "123",
-        null, RequestMethods.DELETE, null, PRIVILEGE, GROUP_NAME, PRIVILEGE_TO_CHECK)
+        null, RequestMethods.DELETE, null, PRIVILEGE, GROUP_NAME, PRIVILEGE_TO_CHECK, SESSION_DATA)
     ).thenReturn(Single.just(RESPONSE_OBJECT));
 
     when(gatewayEndPointService.findEndpointBySlug(
@@ -183,7 +202,7 @@ public class GatewayControllerTest {
         .andReturn();
 
     verify(this.gatewayService).forwardRequest(CommonTestVariable.MANDATORY_REQUEST, URL, "123",
-        null, RequestMethods.DELETE, null, PRIVILEGE, GROUP_NAME, PRIVILEGE_TO_CHECK);
+        null, RequestMethods.DELETE, null, PRIVILEGE, GROUP_NAME, PRIVILEGE_TO_CHECK, SESSION_DATA);
   }
 
   @Before
@@ -204,6 +223,9 @@ public class GatewayControllerTest {
     RESPONSE_OBJECT = new GatewayBaseResponse<>();
     RESPONSE_OBJECT.setCode("SUCCESS");
     RESPONSE_OBJECT.setData("yosia");
+    RESPONSE_OBJECT.setSessionData(SESSION_DATA);
+    RESPONSE_OBJECT.setCurrentSlugPrivileges(PRIVILEGE_RESPONSES);
+    RESPONSE_OBJECT.setPrivileges(PRIVILEGE_RESPONSES);
 
     PowerMockito.mockStatic(MDC.class);
     PowerMockito.when((String) MDC.get(BaseMongoFields.PRIVILEGES)).thenReturn
@@ -218,6 +240,8 @@ public class GatewayControllerTest {
         (CommonTestVariable.REQUEST_ID);
     PowerMockito.when((String) MDC.get(BaseMongoFields.USERNAME)).thenReturn
         (CommonTestVariable.USERNAME);
+    PowerMockito.when((String) MDC.get(BaseMongoFields.PRIVILEGES)).thenReturn
+        (PRIVILEGE_TO_CHECK);
 
     OBJECT_REQUEST_JSON = "{\"privilegeId\" : \"123\", \"privilegeName\" : \"123\", "
         + "\"privilegeDescription\" : \"123\" }";

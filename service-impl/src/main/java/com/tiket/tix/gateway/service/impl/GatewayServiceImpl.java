@@ -4,6 +4,7 @@ import com.tiket.tix.common.rest.web.model.request.MandatoryRequest;
 import com.tiket.tix.gateway.entity.constant.enums.RequestMethods;
 import com.tiket.tix.gateway.entity.constant.enums.ResponseCode;
 import com.tiket.tix.gateway.entity.outbound.GatewayBaseResponse;
+import com.tiket.tix.gateway.entity.outbound.SessionData;
 import com.tiket.tix.gateway.libraries.exception.BusinessLogicException;
 import com.tiket.tix.gateway.outbound.api.GatewayOutboundService;
 import com.tiket.tix.gateway.service.api.GatewayService;
@@ -30,7 +31,7 @@ public class GatewayServiceImpl implements GatewayService {
       Object object,
       RequestMethods requestMethods,
       Map<String, String> requestParams,
-      String requiredPrivilege, String groupName, String privileges) {
+      String requiredPrivilege, String groupName, String privileges, SessionData sessionData) {
 
       Map<String, String> header = new HashMap<>();
       header.put("storeId", mandatoryRequest.getStoreId());
@@ -64,7 +65,10 @@ public class GatewayServiceImpl implements GatewayService {
           throw new BusinessLogicException(ResponseCode.REQUEST_NOT_VALID.getCode(), ResponseCode
               .REQUEST_NOT_VALID.getMessage());
         }
-      })
+      }).map(gatewayBaseResponse -> {
+            gatewayBaseResponse.setSessionData(sessionData);
+            return gatewayBaseResponse;
+          })
           .flatMap(gatewayBaseResponse -> privilegeService.getAuthorizedPrivileges(mandatoryRequest
               , privileges)
               .map(privilegeResponses -> {

@@ -9,6 +9,8 @@ import com.tiket.tix.gateway.entity.constant.unit.test.CommonTestVariable;
 import com.tiket.tix.gateway.entity.outbound.GatewayBaseResponse;
 import com.tiket.tix.gateway.entity.outbound.PrivilegeResponse;
 import com.tiket.tix.gateway.entity.outbound.PrivilegeResponseBuilder;
+import com.tiket.tix.gateway.entity.outbound.SessionData;
+import com.tiket.tix.gateway.entity.outbound.SessionDataBuilder;
 import com.tiket.tix.gateway.outbound.api.GatewayOutboundService;
 import com.tiket.tix.gateway.service.api.PrivilegeService;
 import com.tiket.tix.gateway.service.impl.GatewayServiceImpl;
@@ -56,6 +58,12 @@ public class GatewayServiceImplTest {
 
   String GROUP_NAME = "banks";
 
+  SessionData SESSION_DATA = new SessionDataBuilder()
+      .withBusinessId("123")
+      .withLang("ID")
+      .withUsername("yosia")
+      .build();
+
   List<PrivilegeResponse> PRIVILEGE_RESPONSE = Arrays.asList(
       new PrivilegeResponseBuilder()
       .withPrivilegeId("1")
@@ -72,6 +80,8 @@ public class GatewayServiceImplTest {
     when(privilegeService.checkAuthorized(PRIVILEGE, PRIVILEGE_TO_CHECK)).thenReturn(Single.just(true));
     when(privilegeService.getAuthorizedPrivileges(CommonTestVariable.MANDATORY_REQUEST,
         PRIVILEGE_TO_CHECK)).thenReturn(Single.just(PRIVILEGE_RESPONSE));
+    when(privilegeService.getAuthorizedPrivilegesInCurrentSlug(CommonTestVariable.MANDATORY_REQUEST,
+        PRIVILEGE_TO_CHECK, GROUP_NAME)).thenReturn(Single.just(PRIVILEGE_RESPONSE));
 
     GatewayBaseResponse<Object> result = gatewayServiceImpl.forwardRequest(
         CommonTestVariable.MANDATORY_REQUEST,
@@ -82,7 +92,8 @@ public class GatewayServiceImplTest {
         QUERY,
         PRIVILEGE,
         GROUP_NAME,
-        PRIVILEGE_TO_CHECK
+        PRIVILEGE_TO_CHECK,
+        SESSION_DATA
         ).blockingGet();
 
     assertEquals("yosia", result.getData());
@@ -91,6 +102,8 @@ public class GatewayServiceImplTest {
     verify(privilegeService).checkAuthorized(PRIVILEGE, PRIVILEGE_TO_CHECK);
     verify(privilegeService).getAuthorizedPrivileges(CommonTestVariable.MANDATORY_REQUEST,
         PRIVILEGE_TO_CHECK);
+    verify(privilegeService).getAuthorizedPrivilegesInCurrentSlug(CommonTestVariable.MANDATORY_REQUEST,
+        PRIVILEGE_TO_CHECK, GROUP_NAME);
 
   }
 
@@ -101,6 +114,8 @@ public class GatewayServiceImplTest {
     when(privilegeService.checkAuthorized(PRIVILEGE, PRIVILEGE_TO_CHECK)).thenReturn(Single.just(true));
     when(privilegeService.getAuthorizedPrivileges(CommonTestVariable.MANDATORY_REQUEST,
         PRIVILEGE_TO_CHECK)).thenReturn(Single.just(PRIVILEGE_RESPONSE));
+    when(privilegeService.getAuthorizedPrivilegesInCurrentSlug(CommonTestVariable.MANDATORY_REQUEST,
+        PRIVILEGE_TO_CHECK, GROUP_NAME)).thenReturn(Single.just(PRIVILEGE_RESPONSE));
 
     GatewayBaseResponse<Object> result = gatewayServiceImpl.forwardRequest(
         CommonTestVariable.MANDATORY_REQUEST,
@@ -111,7 +126,8 @@ public class GatewayServiceImplTest {
         QUERY,
         PRIVILEGE,
         GROUP_NAME,
-        PRIVILEGE_TO_CHECK
+        PRIVILEGE_TO_CHECK,
+        SESSION_DATA
     ).blockingGet();
 
     assertEquals("yosia", result.getData());
@@ -120,6 +136,8 @@ public class GatewayServiceImplTest {
     verify(privilegeService).checkAuthorized(PRIVILEGE, PRIVILEGE_TO_CHECK);
     verify(privilegeService).getAuthorizedPrivileges(CommonTestVariable.MANDATORY_REQUEST,
         PRIVILEGE_TO_CHECK);
+    verify(privilegeService).getAuthorizedPrivilegesInCurrentSlug(CommonTestVariable.MANDATORY_REQUEST,
+        PRIVILEGE_TO_CHECK, GROUP_NAME);
   }
 
   @Test
@@ -129,6 +147,8 @@ public class GatewayServiceImplTest {
     when(privilegeService.checkAuthorized(PRIVILEGE, PRIVILEGE_TO_CHECK)).thenReturn(Single.just(true));
     when(privilegeService.getAuthorizedPrivileges(CommonTestVariable.MANDATORY_REQUEST,
         PRIVILEGE_TO_CHECK)).thenReturn(Single.just(PRIVILEGE_RESPONSE));
+    when(privilegeService.getAuthorizedPrivilegesInCurrentSlug(CommonTestVariable.MANDATORY_REQUEST,
+        PRIVILEGE_TO_CHECK, GROUP_NAME)).thenReturn(Single.just(PRIVILEGE_RESPONSE));
 
     GatewayBaseResponse<Object> result = gatewayServiceImpl.forwardRequest(
         CommonTestVariable.MANDATORY_REQUEST,
@@ -139,7 +159,8 @@ public class GatewayServiceImplTest {
         null,
         PRIVILEGE,
         GROUP_NAME,
-        PRIVILEGE_TO_CHECK
+        PRIVILEGE_TO_CHECK,
+        SESSION_DATA
     ).blockingGet();
 
     assertEquals("yosia", result.getData());
@@ -148,6 +169,8 @@ public class GatewayServiceImplTest {
     verify(privilegeService).checkAuthorized(PRIVILEGE, PRIVILEGE_TO_CHECK);
     verify(privilegeService).getAuthorizedPrivileges(CommonTestVariable.MANDATORY_REQUEST,
         PRIVILEGE_TO_CHECK);
+    verify(privilegeService).getAuthorizedPrivilegesInCurrentSlug(CommonTestVariable.MANDATORY_REQUEST,
+        PRIVILEGE_TO_CHECK, GROUP_NAME);
   }
 
   @Test
@@ -159,6 +182,8 @@ public class GatewayServiceImplTest {
     when(privilegeService.checkAuthorized(PRIVILEGE, PRIVILEGE_TO_CHECK)).thenReturn(Single.just(true));
     when(privilegeService.getAuthorizedPrivileges(CommonTestVariable.MANDATORY_REQUEST,
         PRIVILEGE_TO_CHECK)).thenReturn(Single.just(PRIVILEGE_RESPONSE));
+    when(privilegeService.getAuthorizedPrivilegesInCurrentSlug(CommonTestVariable.MANDATORY_REQUEST,
+        PRIVILEGE_TO_CHECK, GROUP_NAME)).thenReturn(Single.just(PRIVILEGE_RESPONSE));
 
     GatewayBaseResponse<Object> result = gatewayServiceImpl.forwardRequest(
         CommonTestVariable.MANDATORY_REQUEST,
@@ -169,7 +194,8 @@ public class GatewayServiceImplTest {
         null,
         PRIVILEGE,
         GROUP_NAME,
-        PRIVILEGE_TO_CHECK
+        PRIVILEGE_TO_CHECK,
+        SESSION_DATA
     ).blockingGet();
 
     assertEquals("yosia", result.getData());
@@ -178,6 +204,8 @@ public class GatewayServiceImplTest {
     verify(privilegeService).checkAuthorized(PRIVILEGE, PRIVILEGE_TO_CHECK);
     verify(privilegeService).getAuthorizedPrivileges(CommonTestVariable.MANDATORY_REQUEST,
         PRIVILEGE_TO_CHECK);
+    verify(privilegeService).getAuthorizedPrivilegesInCurrentSlug(CommonTestVariable.MANDATORY_REQUEST,
+        PRIVILEGE_TO_CHECK, GROUP_NAME);
   }
 
   @Test
@@ -189,6 +217,8 @@ public class GatewayServiceImplTest {
     when(privilegeService.checkAuthorized(PRIVILEGE, PRIVILEGE_TO_CHECK)).thenReturn(Single.just(true));
     when(privilegeService.getAuthorizedPrivileges(CommonTestVariable.MANDATORY_REQUEST,
         PRIVILEGE_TO_CHECK)).thenReturn(Single.just(PRIVILEGE_RESPONSE));
+    when(privilegeService.getAuthorizedPrivilegesInCurrentSlug(CommonTestVariable.MANDATORY_REQUEST,
+        PRIVILEGE_TO_CHECK, GROUP_NAME)).thenReturn(Single.just(PRIVILEGE_RESPONSE));
 
     GatewayBaseResponse<Object> result = gatewayServiceImpl.forwardRequest(
         CommonTestVariable.MANDATORY_REQUEST,
@@ -199,7 +229,8 @@ public class GatewayServiceImplTest {
         null,
         PRIVILEGE,
         GROUP_NAME,
-        PRIVILEGE_TO_CHECK
+        PRIVILEGE_TO_CHECK,
+        SESSION_DATA
     ).blockingGet();
 
     assertEquals("yosia", result.getData());
@@ -208,6 +239,8 @@ public class GatewayServiceImplTest {
     verify(privilegeService).checkAuthorized(PRIVILEGE, PRIVILEGE_TO_CHECK);
     verify(privilegeService).getAuthorizedPrivileges(CommonTestVariable.MANDATORY_REQUEST,
         PRIVILEGE_TO_CHECK);
+    verify(privilegeService).getAuthorizedPrivilegesInCurrentSlug(CommonTestVariable.MANDATORY_REQUEST,
+        PRIVILEGE_TO_CHECK, GROUP_NAME);
   }
 
   @Before
