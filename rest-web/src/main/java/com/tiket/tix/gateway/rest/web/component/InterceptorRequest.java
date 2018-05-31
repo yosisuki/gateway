@@ -36,6 +36,12 @@ public class InterceptorRequest extends HandlerInterceptorAdapter {
   private static final String SESSION_NAME = "PHPSESSID";
   private static final String KEY_PRIVILEGE = "priv";
   private static final String KEY_ROLE = "role";
+  private static final String PARSED_JSON_USERNAME = "username";
+  private static final String PARSED_JSON_BUSINESS_ID = "business_id";
+  private static final String PARSED_JSON_LANG = "userlang";
+  private static final String SEPARATOR = "~";
+
+  private static final String DEFAULT_LANGUAGE = "id";
 
   private static final Logger LOGGER = LoggerFactory.getLogger(InterceptorRequest.class);
 
@@ -53,7 +59,6 @@ public class InterceptorRequest extends HandlerInterceptorAdapter {
     }
 
     LOGGER.info("InterceptorRequest preHandle : PHPREDIS_SESSION:{}", session);
-
     String sessionData = this.cacheService.findCacheByKey("PHPREDIS_SESSION:" + session, String
         .class);
 
@@ -78,16 +83,16 @@ public class InterceptorRequest extends HandlerInterceptorAdapter {
 
     MDC.put(BaseMongoFields.STORE_ID, STORE_ID);
     MDC.put(BaseMongoFields.CHANNEL_ID, CHANNEL_ID);
-    MDC.put(BaseMongoFields.USERNAME, "guest");
+    MDC.put(BaseMongoFields.USERNAME, USERNAME);
 
-    if(isExistUsername(parsedJson.get("username")) && !"".equals(parsedJson.get("username"))) {
-      MDC.put(BaseMongoFields.USERNAME, parsedJson.get("username"));
-      MDC.put(BaseMongoFields.BUSINESS_ID, parsedJson.get("business_id"));
+    if(isExistUsername(parsedJson.get(PARSED_JSON_USERNAME)) && !"".equals(parsedJson.get(PARSED_JSON_USERNAME))) {
+      MDC.put(BaseMongoFields.USERNAME, parsedJson.get(PARSED_JSON_USERNAME));
+      MDC.put(BaseMongoFields.BUSINESS_ID, parsedJson.get(PARSED_JSON_BUSINESS_ID));
       MDC.put(BaseMongoFields.PRIVILEGES, parsedJson.get(KEY_PRIVILEGE));
     }
 
     MDC.put(LanguageFields.LANG, this.getUserlang(request));
-    String langQueryParam = request.getHeader("lang");
+    String langQueryParam = request.getHeader(LanguageFields.LANG);
     if(langQueryParam != null && !langQueryParam.isEmpty()){
       MDC.put(LanguageFields.LANG, langQueryParam.toLowerCase());
     }
@@ -102,7 +107,7 @@ public class InterceptorRequest extends HandlerInterceptorAdapter {
     MandatoryRequest newMandatoryRequest = new MandatoryRequestBuilder()
         .withStoreId(STORE_ID)
         .withChannelId(CHANNEL_ID)
-        .withUsername(parsedJson.get("username"))
+        .withUsername(parsedJson.get(PARSED_JSON_USERNAME))
         .withRequestId(nextInt)
         .withServiceId(SERVICE_ID)
         .build();
@@ -127,7 +132,7 @@ public class InterceptorRequest extends HandlerInterceptorAdapter {
             cookieString = cookie.getValue();
 
             try {
-              String[] cookieStrings = cookieString.split("~");
+              String[] cookieStrings = cookieString.split(SEPARATOR);
               cookieString = cookieStrings[cookieStrings.length - 1];
             } catch (Exception e) {
             }
@@ -151,9 +156,9 @@ public class InterceptorRequest extends HandlerInterceptorAdapter {
   }
 
   private String getUserlang(HttpServletRequest request){
-    String userlang = this.getValueFromCookie(request, "userlang");
+    String userlang = this.getValueFromCookie(request, PARSED_JSON_LANG);
     if(!isExistUserlang(userlang)){
-      userlang = "id";
+      userlang = DEFAULT_LANGUAGE;
     }
     return userlang;
   }
@@ -173,7 +178,7 @@ public class InterceptorRequest extends HandlerInterceptorAdapter {
         cookieString = cookie.getValue();
 
         try{
-          String[] cookieStrings = cookieString.split("~");
+          String[] cookieStrings = cookieString.split(SEPARATOR);
           cookieString = cookieStrings[cookieStrings.length - 1];
         } catch (Exception e){
           return "Failed to get value from cookie.";
