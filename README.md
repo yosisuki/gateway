@@ -1,10 +1,16 @@
-# TIX API com.tiket.tix.gateway.outbound.impl.GatewayOutboundServiceImpl
+# TIX API Gateway Dashboard
 
 This project was created for connecting the ReactJS Front-end to Microservices CRUD operation, only applies to the new Admin Dashboard.
 
 Will be used for :
 - Handle login session from PHP Monolith
 - Authenticate access and privilege for every menu in New Admin Dashboard 
+- Retrieve the session data stored to PHP Monolith, such as :
+1. Username
+2. BusinessId
+3. List of owned privileges
+4. List of owned roles
+5. Lang
 
 How it works :
 - Each time user login in PHP Monolith, it will store the userdata session into redis by using its cookie as redis key
