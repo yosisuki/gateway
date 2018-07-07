@@ -1,6 +1,7 @@
 package com.tiket.tix.gateway.service.impl;
 
 import com.tiket.tix.common.rest.web.model.request.MandatoryRequest;
+import com.tiket.tix.gateway.entity.MonolithSession;
 import com.tiket.tix.gateway.entity.constant.enums.ResponseCode;
 import com.tiket.tix.gateway.entity.outbound.GatewayBaseResponse;
 import com.tiket.tix.gateway.entity.outbound.SessionData;
@@ -11,12 +12,16 @@ import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.tiket.tix.gateway.outbound.api.MonolithOutboundService;
 
 @Service
 public class SessionServiceImpl implements SessionService {
 
   @Autowired
   private PrivilegeService privilegeService;
+
+  @Autowired
+  private MonolithOutboundService monolithOutboundService;
 
   @Override
   public Single<GatewayBaseResponse<String>> getSessionData(
@@ -39,4 +44,10 @@ public class SessionServiceImpl implements SessionService {
           return gatewayBaseResponse;
         }).subscribeOn(Schedulers.io());
   }
+
+  @Override
+  public MonolithSession getMonolithSession(String sessionId) {
+    return monolithOutboundService.findMonolithSession(sessionId);
+  }
+
 }

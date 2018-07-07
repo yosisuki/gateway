@@ -1,6 +1,7 @@
 package com.tiket.tix.gateway.service.api;
 
 import com.tiket.tix.common.rest.web.model.request.MandatoryRequest;
+import com.tiket.tix.gateway.entity.MonolithSession;
 import com.tiket.tix.gateway.entity.outbound.GatewayBaseResponse;
 import com.tiket.tix.gateway.entity.outbound.SessionData;
 import io.reactivex.Single;
@@ -12,4 +13,7 @@ public interface SessionService {
       String roles,
       SessionData sessionData
   );
+
+  MonolithSession getMonolithSession(String sessionId);
+
 }

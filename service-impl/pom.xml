@@ -14,5 +14,9 @@
       <groupId>com.tiket.tix.gateway-dashboard-flight</groupId>
       <artifactId>service-api</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.tiket.tix.gateway-dashboard-flight</groupId>
+      <artifactId>inbound-api</artifactId>
+    </dependency>
   </dependencies>
 </project>
