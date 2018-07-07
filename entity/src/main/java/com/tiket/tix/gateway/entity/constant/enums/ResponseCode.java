@@ -3,6 +3,7 @@ package com.tiket.tix.gateway.entity.constant.enums;
 public enum ResponseCode {
   SUCCESS("SUCCESS", "SUCCESS"),
   SYSTEM_ERROR("SYSTEM_ERROR", "Contact our team"),
+  IO_EXCEPTION("IO_EXCEPTION","IO Exception Error"),
   DUPLICATE_DATA("DUPLICATE_DATA", "Duplicate data"),
   DATA_NOT_EXIST("DATA_NOT_EXIST", "No data exist"),
   TOKEN_NOT_MATCH("TOKEN_NOT_MATCH", "Token not match"),
@@ -12,6 +13,7 @@ public enum ResponseCode {
   METHOD_ARGUMENTS_NOT_VALID("METHOD_ARGUMENTS_NOT_VALID","Method Arguments Not Valid"),
   RUNTIME_ERROR("RUNTIME_ERROR", "Runtime Error"),
   PAGE_NOT_FOUND("PAGE_NOT_FOUND", "Page Not Found");
+
 
   private String code;
   private String message;

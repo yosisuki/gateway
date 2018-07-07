@@ -1,6 +1,7 @@
 package com.tiket.tix.gateway.outbound.impl.configuration;
 
 import com.tiket.tix.gateway.entity.configuration.GatewayApiConfiguration;
+import com.tiket.tix.gateway.entity.configuration.MonolithConfiguration;
 import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -31,6 +32,28 @@ public class OkHttpConfiguration {
         .connectTimeout(gatewayApiConfiguration.getConnectTimeout(), TimeUnit.MILLISECONDS)
         .readTimeout(gatewayApiConfiguration.getReadTimeout(), TimeUnit.MILLISECONDS)
         .writeTimeout(gatewayApiConfiguration.getReadTimeout(), TimeUnit.MILLISECONDS);
+    builder.addInterceptor(
+        chain -> chain.proceed(chain.request().newBuilder()
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .build()));
+
+    return builder.build();
+  }
+
+  @Bean(name = "MonolithHttpClient")
+  public OkHttpClient okHttpMonolithHttpClient(
+      MonolithConfiguration monolithConfiguration) {
+
+    HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(LOGGER::info);
+
+    httpLoggingInterceptor
+        .setLevel(HttpLoggingInterceptor.Level.valueOf(monolithConfiguration.getLogLevel()));
+
+    OkHttpClient.Builder builder = new OkHttpClient.Builder()
+        .addInterceptor(httpLoggingInterceptor)
+        .connectTimeout(monolithConfiguration.getConnectTimeout(), TimeUnit.MILLISECONDS)
+        .readTimeout(monolithConfiguration.getReadTimeout(), TimeUnit.MILLISECONDS)
+        .writeTimeout(monolithConfiguration.getReadTimeout(), TimeUnit.MILLISECONDS);
     builder.addInterceptor(
         chain -> chain.proceed(chain.request().newBuilder()
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
