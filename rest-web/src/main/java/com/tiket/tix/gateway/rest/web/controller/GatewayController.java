@@ -3,6 +3,7 @@ package com.tiket.tix.gateway.rest.web.controller;
 import com.tiket.tix.common.rest.web.model.request.MandatoryRequest;
 import com.tiket.tix.common.rest.web.model.request.MandatoryRequestBuilder;
 import com.tiket.tix.gateway.entity.constant.ApiPath;
+import com.tiket.tix.gateway.entity.constant.enums.ActionType;
 import com.tiket.tix.gateway.entity.constant.enums.RequestMethods;
 import com.tiket.tix.gateway.entity.constant.fields.BaseMongoFields;
 import com.tiket.tix.gateway.entity.dao.GatewayEndPoint;
@@ -43,11 +44,6 @@ public class GatewayController {
   private GatewayEndPointService endPointService;
 
   private static final String USERNAME = "username";
-  private static final String GET_ALL_ACTION = "getAll";
-  private static final String GET_ACTION = "get";
-  private static final String POST_ACTION = "post";
-  private static final String PUT_ACTION = "put";
-  private static final String DELETE_ACTION = "delete";
 
   private static final Logger LOGGER = LoggerFactory.getLogger(GatewayController.class);
 
@@ -99,7 +95,7 @@ public class GatewayController {
     sessionData.setUsername((String)MDC.get(USERNAME));
 
     GatewayEndPoint gatewayEndPoint = this.endPointService.findEndpointBySlug(mandatoryRequest,
-        endPoint, GET_ALL_ACTION);
+        endPoint, ActionType.GET_ALL_ACTION.getValue());
 
     this.gatewayService.forwardRequest(mandatoryRequest,gatewayEndPoint.getUrl(), null, null,
         RequestMethods.GET, requestParams,
@@ -140,7 +136,7 @@ public class GatewayController {
     sessionData.setUsername((String)MDC.get(USERNAME));
 
     GatewayEndPoint gatewayEndPoint = this.endPointService.findEndpointBySlug(mandatoryRequest,
-        endPoint, GET_ACTION);
+        endPoint, ActionType.GET_ACTION.getValue());
 
     LOGGER.info("receiveAndForwardGet MandatoryRequest = {}, GatewayEndPoint = {}",
         mandatoryRequest, endPoint);
@@ -180,7 +176,7 @@ public class GatewayController {
     sessionData.setUsername((String)MDC.get(USERNAME));
 
     GatewayEndPoint gatewayEndPoint = this.endPointService.findEndpointBySlug(mandatoryRequest,
-        endPoint, POST_ACTION);
+        endPoint, ActionType.POST_ACTION.getValue());
 
     LOGGER.info("receiveAndForwardPost MandatoryRequest = {}, GatewayEndPoint = {}",
         mandatoryRequest, endPoint);
@@ -221,7 +217,7 @@ public class GatewayController {
         mandatoryRequest, endPoint);
 
     GatewayEndPoint gatewayEndPoint = this.endPointService.findEndpointBySlug(mandatoryRequest,
-        endPoint, PUT_ACTION);
+        endPoint, ActionType.PUT_ACTION.getValue());
 
     this.gatewayService.forwardRequest(mandatoryRequest,gatewayEndPoint.getUrl(), param, object,
         RequestMethods.PUT, requestParams, gatewayEndPoint.getPrivilegeId(),
@@ -261,7 +257,7 @@ public class GatewayController {
         mandatoryRequest, endPoint);
 
     GatewayEndPoint gatewayEndPoint = this.endPointService.findEndpointBySlug(mandatoryRequest,
-        endPoint + "/" +  action, PUT_ACTION);
+        endPoint + "/" +  action, ActionType.PUT_ACTION.getValue());
 
     this.gatewayService.forwardRequest(mandatoryRequest,gatewayEndPoint.getUrl(), param, object,
         RequestMethods.PUT, requestParams, gatewayEndPoint.getPrivilegeId(),
@@ -298,7 +294,7 @@ public class GatewayController {
         mandatoryRequest, endPoint);
 
     GatewayEndPoint gatewayEndPoint = this.endPointService.findEndpointBySlug(mandatoryRequest,
-        endPoint, DELETE_ACTION);
+        endPoint, ActionType.DELETE_ACTION.getValue());
 
     this.gatewayService.forwardRequest(
         mandatoryRequest,gatewayEndPoint.getUrl(),

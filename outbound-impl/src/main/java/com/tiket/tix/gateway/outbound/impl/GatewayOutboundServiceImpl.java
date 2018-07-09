@@ -1,14 +1,22 @@
 package com.tiket.tix.gateway.outbound.impl;
 
+import com.tiket.tix.common.libraries.JSONHelper;
+import com.tiket.tix.common.rest.web.model.response.BaseResponse;
+import com.tiket.tix.gateway.entity.constant.enums.ResponseCode;
 import com.tiket.tix.gateway.entity.outbound.GatewayBaseResponse;
 import com.tiket.tix.gateway.libraries.configuration.CommonEndPointService;
+import com.tiket.tix.gateway.libraries.exception.BusinessLogicException;
+import com.tiket.tix.gateway.libraries.utility.OutboundHelper;
 import com.tiket.tix.gateway.outbound.api.GatewayOutboundService;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
 import java.io.IOException;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import retrofit2.Response;
 
 @Service
 public class GatewayOutboundServiceImpl implements GatewayOutboundService{
@@ -22,12 +30,16 @@ public class GatewayOutboundServiceImpl implements GatewayOutboundService{
       IOException {
     return Single.<GatewayBaseResponse<Object>>create(
         singleEmitter -> {
-          GatewayBaseResponse<Object> output = this.gatewayEndPointService.forwardRequestGetAll
-              (url, header, requestParams).execute()
-              .body();
+          Response<Object> output = this.gatewayEndPointService.forwardRequestGetAll
+              (url, header, requestParams)
+              .execute();
 
-          singleEmitter.onSuccess(output);
+          OutboundHelper.checkStatusResponse(output);
 
+          GatewayBaseResponse<Object> gatewayBaseResponse = new GatewayBaseResponse<>();
+          gatewayBaseResponse.setData(output.body());
+
+          singleEmitter.onSuccess(gatewayBaseResponse);
         }).subscribeOn(Schedulers.io());
   }
 
@@ -38,11 +50,17 @@ public class GatewayOutboundServiceImpl implements GatewayOutboundService{
 
     return Single.<GatewayBaseResponse<Object>>create(
         singleEmitter -> {
-          GatewayBaseResponse<Object> output = this.gatewayEndPointService.forwardRequestGet
-              (url, header).execute()
-              .body();
 
-          singleEmitter.onSuccess(output);
+          Response<Object> output = this.gatewayEndPointService.forwardRequestGet
+              (url, header)
+              .execute();
+
+          OutboundHelper.checkStatusResponse(output);
+
+          GatewayBaseResponse<Object> gatewayBaseResponse = new GatewayBaseResponse<>();
+          gatewayBaseResponse.setData(output.body());
+
+          singleEmitter.onSuccess(gatewayBaseResponse);
         }).subscribeOn(Schedulers.io());
   }
 
@@ -53,10 +71,17 @@ public class GatewayOutboundServiceImpl implements GatewayOutboundService{
 
     return Single.<GatewayBaseResponse<Object>>create(
         singleEmitter -> {
-          GatewayBaseResponse<Object> output = this.gatewayEndPointService.forwardRequestPost
+
+          Response<Object> output = this.gatewayEndPointService.forwardRequestPost
               (url, header, object)
-              .execute().body();
-          singleEmitter.onSuccess(output);
+              .execute();
+
+          OutboundHelper.checkStatusResponse(output);
+
+          GatewayBaseResponse<Object> gatewayBaseResponse = new GatewayBaseResponse<>();
+          gatewayBaseResponse.setData(output.body());
+
+          singleEmitter.onSuccess(gatewayBaseResponse);
         }).subscribeOn(Schedulers.io());
   }
 
@@ -67,9 +92,17 @@ public class GatewayOutboundServiceImpl implements GatewayOutboundService{
 
     return Single.<GatewayBaseResponse<Object>>create(
         singleEmitter -> {
-          GatewayBaseResponse<Object> output = this.gatewayEndPointService.forwardRequestPut
-              (url, header, object).execute().body();
-          singleEmitter.onSuccess(output);
+
+          Response<Object> output = this.gatewayEndPointService.forwardRequestPut
+              (url, header, object)
+              .execute();
+
+          OutboundHelper.checkStatusResponse(output);
+
+          GatewayBaseResponse<Object> gatewayBaseResponse = new GatewayBaseResponse<>();
+          gatewayBaseResponse.setData(output.body());
+
+          singleEmitter.onSuccess(gatewayBaseResponse);
         }).subscribeOn(Schedulers.io());
   }
 
@@ -79,9 +112,16 @@ public class GatewayOutboundServiceImpl implements GatewayOutboundService{
       IOException {
     return Single.<GatewayBaseResponse<Object>>create(
         singleEmitter -> {
-          GatewayBaseResponse<Object> output = this.gatewayEndPointService.forwardRequestDelete
-              (url, header).execute().body();
-          singleEmitter.onSuccess(output);
+          Response<Object> output = this.gatewayEndPointService.forwardRequestDelete
+              (url, header)
+              .execute();
+
+          OutboundHelper.checkStatusResponse(output);
+
+          GatewayBaseResponse<Object> gatewayBaseResponse = new GatewayBaseResponse<>();
+          gatewayBaseResponse.setData(output.body());
+
+          singleEmitter.onSuccess(gatewayBaseResponse);
         }).subscribeOn(Schedulers.io());
 
 
