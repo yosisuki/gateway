@@ -233,7 +233,7 @@ public class GatewayController {
   @RequestMapping(path = ApiPath.END_POINT + ApiPath.PARAM + ApiPath.ACTION_UPDATE, method = RequestMethod
       .PUT)
   public DeferredResult<GatewayBaseResponse<Object>>
-  receiveAndForwardPutWithActionUpdate(
+  receiveAndForwardPutWithActionStatus(
       @PathVariable("endPoint") String endPoint,
       @PathVariable("param") String param,
       @PathVariable("actionStatus") String actionStatus) {
