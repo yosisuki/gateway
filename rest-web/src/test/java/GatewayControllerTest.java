@@ -111,7 +111,7 @@ public class GatewayControllerTest {
         null,
         null,
         RequestMethods.GET,
-        QUERY,
+        QUERY, null,
         PRIVILEGE,
         GROUP_NAME,
         PRIVILEGE_TO_CHECK,
@@ -138,14 +138,14 @@ public class GatewayControllerTest {
         .andReturn();
 
     verify(this.gatewayService).forwardRequest(CommonTestVariable.MANDATORY_REQUEST, URL, null,
-        null, RequestMethods.GET, QUERY, PRIVILEGE, GROUP_NAME, PRIVILEGE_TO_CHECK, SESSION_DATA);
+        null, RequestMethods.GET, QUERY, null,PRIVILEGE, GROUP_NAME, PRIVILEGE_TO_CHECK, SESSION_DATA);
   }
 
   @Test
   public void receiveForwardGetTest() throws Exception {
     when(this.gatewayService.forwardRequest(
         CommonTestVariable.MANDATORY_REQUEST, URL, "123",
-        null, RequestMethods.GET, null, PRIVILEGE, GROUP_NAME,  PRIVILEGE_TO_CHECK, SESSION_DATA)
+        null, RequestMethods.GET, null, null,PRIVILEGE, GROUP_NAME,  PRIVILEGE_TO_CHECK, SESSION_DATA)
     ).thenReturn(Single.just(RESPONSE_OBJECT));
 
     when(gatewayEndPointService.findEndpointBySlug(
@@ -170,14 +170,14 @@ public class GatewayControllerTest {
         .andReturn();
 
     verify(this.gatewayService).forwardRequest(CommonTestVariable.MANDATORY_REQUEST, URL, "123",
-        null, RequestMethods.GET, null, PRIVILEGE, GROUP_NAME, PRIVILEGE_TO_CHECK, SESSION_DATA);
+        null, RequestMethods.GET, null, null,PRIVILEGE, GROUP_NAME, PRIVILEGE_TO_CHECK, SESSION_DATA);
   }
 
   @Test
   public void receiveForwardDeleteTest() throws Exception {
     when(this.gatewayService.forwardRequest(
         CommonTestVariable.MANDATORY_REQUEST, URL, "123",
-        null, RequestMethods.DELETE, null, PRIVILEGE, GROUP_NAME, PRIVILEGE_TO_CHECK, SESSION_DATA)
+        null, RequestMethods.DELETE, null, null,PRIVILEGE, GROUP_NAME, PRIVILEGE_TO_CHECK, SESSION_DATA)
     ).thenReturn(Single.just(RESPONSE_OBJECT));
 
     when(gatewayEndPointService.findEndpointBySlug(
@@ -202,7 +202,7 @@ public class GatewayControllerTest {
         .andReturn();
 
     verify(this.gatewayService).forwardRequest(CommonTestVariable.MANDATORY_REQUEST, URL, "123",
-        null, RequestMethods.DELETE, null, PRIVILEGE, GROUP_NAME, PRIVILEGE_TO_CHECK, SESSION_DATA);
+        null, RequestMethods.DELETE, null, null, PRIVILEGE, GROUP_NAME, PRIVILEGE_TO_CHECK, SESSION_DATA);
   }
 
   @Before

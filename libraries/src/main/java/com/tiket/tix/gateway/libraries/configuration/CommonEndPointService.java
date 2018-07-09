@@ -34,6 +34,10 @@ public interface CommonEndPointService {
   Call<Object> forwardRequestPut(@Url String url, @HeaderMap
       Map<String, String> headerMap, @Body Object object);
 
+  @PUT
+  Call<Object> forwardRequestPutWithoutBody(@Url String url, @HeaderMap
+      Map<String, String> headerMap);
+
   @DELETE
   Call<Object> forwardRequestDelete(@Url String url, @HeaderMap
       Map<String, String> headerMap);

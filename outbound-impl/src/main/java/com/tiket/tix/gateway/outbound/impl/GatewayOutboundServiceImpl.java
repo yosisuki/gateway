@@ -126,4 +126,25 @@ public class GatewayOutboundServiceImpl implements GatewayOutboundService{
 
 
   }
+
+  @Override
+  public Single<GatewayBaseResponse<Object>> forwardRequestPutWithoutBody(String
+      url, Map<String, String> header) throws IOException {
+
+    return Single.<GatewayBaseResponse<Object>>create(
+        singleEmitter -> {
+
+          Response<Object> output = this.gatewayEndPointService.forwardRequestPutWithoutBody
+              (url, header)
+              .execute();
+
+          OutboundHelper.checkStatusResponse(output);
+
+          GatewayBaseResponse<Object> gatewayBaseResponse = new GatewayBaseResponse<>();
+          gatewayBaseResponse.setData(output.body());
+
+          singleEmitter.onSuccess(gatewayBaseResponse);
+        }).subscribeOn(Schedulers.io());
+  }
+
 }
