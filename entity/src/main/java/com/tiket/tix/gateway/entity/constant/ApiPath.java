@@ -7,5 +7,6 @@ public interface ApiPath {
   String ID = "/{id}";
   String END_POINT = BASE_PATH + "/{endPoint}";
   String ACTION = "/{action}";
+  String ACTION_UPDATE = "/{actionStatus}";
   String PARAM = "/{param}";
 }

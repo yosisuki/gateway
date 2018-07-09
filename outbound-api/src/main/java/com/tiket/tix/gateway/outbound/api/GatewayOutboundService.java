@@ -24,4 +24,7 @@ public interface GatewayOutboundService {
   Single<GatewayBaseResponse<Object>> forwardRequestDelete(String endPoint, Map<String, String>
       header) throws
       IOException;
+
+  Single<GatewayBaseResponse<Object>> forwardRequestPutWithoutBody(String
+      url, Map<String, String> header) throws IOException;
 }

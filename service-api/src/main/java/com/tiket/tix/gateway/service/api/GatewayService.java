@@ -12,6 +12,6 @@ public interface GatewayService {
       String param, Object
       object,
       RequestMethods
-      requestMethods, Map<String, String> requestParams,
+      requestMethods, Map<String, String> requestParams, String actionStatus,
       String requiredPrivilege, String groupName, String privileges, SessionData sessionData);
 }

@@ -31,6 +31,7 @@ public class GatewayServiceImpl implements GatewayService {
       Object object,
       RequestMethods requestMethods,
       Map<String, String> requestParams,
+      String actionStatus,
       String requiredPrivilege, String groupName, String privileges, SessionData sessionData) {
 
       Map<String, String> header = new HashMap<>();
@@ -58,6 +59,10 @@ public class GatewayServiceImpl implements GatewayService {
               isExistParam(param)){
             return this.gatewayOutboundService.forwardRequestPut(url + "/" + param, header ,
                 object);
+          } else if(requestMethods.getValue().equals(RequestMethods.PUT.getValue()) &&
+              isActionUpdate(actionStatus) &&
+              isExistParam(param)){
+            return this.gatewayOutboundService.forwardRequestPutWithoutBody(url + "/" + param + "/" + actionStatus, header);
           } else {
             return this.gatewayOutboundService.forwardRequestDelete(url + "/" + param, header);
           }
@@ -84,6 +89,10 @@ public class GatewayServiceImpl implements GatewayService {
   }
 
   private boolean isExistBody(Object object) {
+    return object != null;
+  }
+
+  private boolean isActionUpdate(Object object) {
     return object != null;
   }
 
